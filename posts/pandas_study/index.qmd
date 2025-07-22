@@ -1,0 +1,8 @@
+---
+title: "pandas study"
+author: "Yoon Heejae"
+date: now
+categories: [study]
+---
+
+나의 첫 블로그
