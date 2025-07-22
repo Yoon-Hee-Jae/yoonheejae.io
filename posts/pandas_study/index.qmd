@@ -16,7 +16,7 @@ df = df.astype({'datetime' : 'datetime64[ns]', 'weather' : 'int64',
                 'holiday' : 'object'})
 ```
 
-### 1번 문제 계절(season) == 1일 때, 가장 대여량이 많은 시간대(hour)을 구하시오.
+### 1번 문제 계절(season) == 1일 때, 가장 대여량이 많은 시간대(hour)을 구하시오
 
 ```{python}
 # 1번
