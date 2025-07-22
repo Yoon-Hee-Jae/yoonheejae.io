@@ -106,10 +106,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-
-
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -193,7 +190,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="데이터-불러오기" class="level2">
 <h2 class="anchored" data-anchor-id="데이터-불러오기">데이터 불러오기</h2>
-<div id="e8c30cf4" class="cell" data-execution_count="1">
+<div id="79a692bd" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'bike_data.csv'</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df.head()</span>
@@ -204,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="번-문제" class="level3">
 <h3 class="anchored" data-anchor-id="번-문제">1번 문제</h3>
-<div id="63a9f19a" class="cell" data-execution_count="2">
+<div id="c3083973" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1번</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> df[df[<span class="st">'season'</span>]<span class="op">==</span><span class="dv">1</span>]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df1</span>
@@ -212,23 +209,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df1</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">max</span>(df1.groupby(<span class="st">'hour'</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()) <span class="co"># 13시 1417개</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>C:\Users\USER\AppData\Local\Temp\ipykernel_15348\1215149187.py:4: SettingWithCopyWarning: 
+<pre><code>C:\Users\USER\AppData\Local\Temp\ipykernel_22860\1215149187.py:4: SettingWithCopyWarning: 
 A value is trying to be set on a copy of a slice from a DataFrame.
 Try using .loc[row_indexer,col_indexer] = value instead
 
 See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
   df1['hour'] = df1['datetime'].dt.hour</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="26">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>1417</code></pre>
 </div>
 </div>
 </section>
 <section id="번-문제-1" class="level3">
 <h3 class="anchored" data-anchor-id="번-문제-1">2번 문제</h3>
-<div id="8e7d5012" class="cell" data-execution_count="3">
+<div id="75234b63" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'season'</span>)[<span class="st">'count'</span>].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="27">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>season
 1    103.169811
 2    218.803922
@@ -240,12 +237,12 @@ Name: count, dtype: float64</code></pre>
 </section>
 <section id="번-문제-3번-특정-달month-동안의-총-대여량count을-구하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번-문제-3번-특정-달month-동안의-총-대여량count을-구하시오.">3번 문제 3번 특정 달(month) 동안의 총 대여량(count)을 구하시오.</h3>
-<div id="d35d6d65" class="cell" data-execution_count="4">
+<div id="58ec68de" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'month'</span>] <span class="op">=</span> df[<span class="st">'datetime'</span>].dt.month</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_jan <span class="op">=</span> df[df[<span class="st">'month'</span>] <span class="op">==</span> <span class="dv">1</span>]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_jan[<span class="st">'count'</span>].<span class="bu">sum</span>()</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'datetime'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>0     2011-09-05 17:00:00
 1     2011-05-17 11:00:00
 2     2011-11-10 09:00:00
@@ -263,7 +260,7 @@ Name: datetime, Length: 435, dtype: datetime64[ns]</code></pre>
 </section>
 <section id="번-가장-대여량이-많은-날짜를-구하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번-가장-대여량이-많은-날짜를-구하시오.">4번 가장 대여량이 많은 날짜를 구하시오.</h3>
-<div id="33873f6b" class="cell" data-execution_count="5">
+<div id="c9dac8ec" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'date'</span>] <span class="op">=</span> df[<span class="st">'datetime'</span>].dt.date</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> df.groupby(<span class="st">'date'</span>,as_index<span class="op">=</span><span class="va">False</span>)[[<span class="st">'count'</span>]].<span class="bu">sum</span>()</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>a</span>
@@ -273,7 +270,7 @@ Name: datetime, Length: 435, dtype: datetime64[ns]</code></pre>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>max_idx <span class="op">=</span> np.argmax(a[<span class="st">'count'</span>])</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>a.iloc[max_idx,:]</span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>a.iloc[<span class="dv">198</span>,:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="29">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>date     2012-05-11
 count          1398
 Name: 198, dtype: object</code></pre>
@@ -282,10 +279,10 @@ Name: 198, dtype: object</code></pre>
 </section>
 <section id="번-시간대hour별-평균-대여량count을-구하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번-시간대hour별-평균-대여량count을-구하시오.">5번 시간대(hour)별 평균 대여량(count)을 구하시오.</h3>
-<div id="5314be2d" class="cell" data-execution_count="6">
+<div id="e974c96c" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'hour'</span>] <span class="op">=</span> df[<span class="st">'datetime'</span>].dt.hour</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'hour'</span>,as_index<span class="op">=</span><span class="va">False</span>)[[<span class="st">'count'</span>]].mean()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="30">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
 
@@ -427,10 +424,10 @@ Name: 198, dtype: object</code></pre>
 </section>
 <section id="번-특정-요일weekday-동안의-총-대여량count을-구하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번-특정-요일weekday-동안의-총-대여량count을-구하시오.">6번 특정 요일(weekday) 동안의 총 대여량(count)을 구하시오.</h3>
-<div id="96ac2fcb" class="cell" data-execution_count="7">
+<div id="9d9481a6" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'weekday'</span>] <span class="op">=</span> df[<span class="st">'datetime'</span>].dt.weekday</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'weekday'</span>,as_index<span class="op">=</span><span class="va">False</span>)[<span class="st">'count'</span>].<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
@@ -487,7 +484,7 @@ Name: 198, dtype: object</code></pre>
 </section>
 <section id="번" class="level3">
 <h3 class="anchored" data-anchor-id="번">7번</h3>
-<div id="4afed6f3" class="cell" data-execution_count="8">
+<div id="a8c301ab" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df_melt <span class="op">=</span> pd.melt(df,id_vars<span class="op">=</span>[<span class="st">'datetime'</span>,<span class="st">'season'</span>,],</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        value_vars<span class="op">=</span>[<span class="st">'casual'</span>,<span class="st">'registered'</span>],</span>
@@ -497,9 +494,9 @@ Name: 198, dtype: object</code></pre>
 </section>
 <section id="번-1" class="level3">
 <h3 class="anchored" data-anchor-id="번-1">8번</h3>
-<div id="298d639d" class="cell" data-execution_count="9">
+<div id="3ba86f0d" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_melt.groupby([<span class="st">'season'</span>,<span class="st">'user_type'</span>])[[<span class="st">'user_count'</span>]].mean().reset_index()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <div>
 
 
@@ -570,7 +567,7 @@ Name: 198, dtype: object</code></pre>
 </section>
 <section id="번로그-칼럼에서-숫자-정보만-추출하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번로그-칼럼에서-숫자-정보만-추출하시오.">9번로그 칼럼에서 숫자 정보만 추출하시오.</h3>
-<div id="3de14a72" class="cell" data-execution_count="10">
+<div id="a67059de" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.max_columns'</span>, <span class="va">None</span>) <span class="co"># 전체 칼럼 정보 프린트 옵션</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'logdata.csv'</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.head(<span class="dv">2</span>))</span>
@@ -584,10 +581,10 @@ Name: 198, dtype: object</code></pre>
 </section>
 <section id="번로그-칼럼에서-모든-시간-정보를-추출하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번로그-칼럼에서-모든-시간-정보를-추출하시오.">10번로그 칼럼에서 모든 시간 정보를 추출하시오.</h3>
-<div id="4ceab303" class="cell" data-execution_count="11">
+<div id="1fb0a12f" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'시간'</span>] <span class="op">=</span> df[<span class="st">'로그'</span>].<span class="bu">str</span>.extract(<span class="vs">r'</span><span class="kw">(</span><span class="pp">[</span><span class="dv">\d</span><span class="pp">]</span><span class="op">{2}</span><span class="vs">:</span><span class="pp">[</span><span class="dv">\d</span><span class="pp">]</span><span class="op">{2}</span><span class="vs">:</span><span class="pp">[</span><span class="dv">\d</span><span class="pp">]</span><span class="op">{2}</span><span class="kw">)</span><span class="vs">'</span>)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="35">
+<div class="cell-output cell-output-display" data-execution_count="11">
 <div>
 
 
@@ -790,10 +787,10 @@ Name: 198, dtype: object</code></pre>
 </section>
 <section id="번로그-칼럼에서-한글-정보만-추출하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번로그-칼럼에서-한글-정보만-추출하시오.">11번로그 칼럼에서 한글 정보만 추출하시오.</h3>
-<div id="479c90b2" class="cell" data-execution_count="12">
+<div id="82487a92" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'User'</span>] <span class="op">=</span> df[<span class="st">'로그'</span>].<span class="bu">str</span>.extract(<span class="vs">r'</span><span class="kw">(</span><span class="pp">[가-힣]</span><span class="op">+</span><span class="kw">)</span><span class="vs">'</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'User'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="36">
+<div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>0     홍길동
 1     김철수
 2     이영희
@@ -830,10 +827,10 @@ Name: User, dtype: object</code></pre>
 </section>
 <section id="번로그-칼럼에서-특수-문자를-제거하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번로그-칼럼에서-특수-문자를-제거하시오.">12번로그 칼럼에서 특수 문자를 제거하시오.</h3>
-<div id="51db85ec" class="cell" data-execution_count="13">
+<div id="627ce3a3" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'제거'</span>] <span class="op">=</span> df[<span class="st">'로그'</span>].<span class="bu">str</span>.replace(<span class="vs">r'</span><span class="pp">[^a-zA-Z0-9가-힣</span><span class="dv">\s</span><span class="pp">]</span><span class="vs">'</span>, <span class="st">''</span>, regex<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'제거'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>0         20240718 123456 User 홍길동 Action Login ID12345
 1     20240718 123500 User 김철수 Action Purchase Amoun...
 2       20240718 123610 User 이영희 Action Logout Time 30s
@@ -870,7 +867,7 @@ Name: 제거, dtype: object</code></pre>
 </section>
 <section id="번-13번-로그-칼럼에서-유저-amount-값을-추출한-후-각-유저별-amount의-평균값을-계산하시오." class="level3">
 <h3 class="anchored" data-anchor-id="번-13번-로그-칼럼에서-유저-amount-값을-추출한-후-각-유저별-amount의-평균값을-계산하시오.">13번# 13번 로그 칼럼에서 유저, Amount 값을 추출한 후 각 유저별 Amount의 평균값을 계산하시오.</h3>
-<div id="bbf40f6f" class="cell" data-execution_count="14">
+<div id="d3534c29" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'숫자'</span>]</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'숫자'</span>]</span>
@@ -893,7 +890,7 @@ Name: 제거, dtype: object</code></pre>
 <span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
 <span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'Amount'</span>] <span class="op">=</span> df[<span class="st">'로그'</span>].<span class="bu">str</span>.extract(<span class="vs">r'Amount:</span><span class="dv">\s</span><span class="op">*</span><span class="kw">(</span><span class="dv">\d</span><span class="op">+</span><span class="kw">)</span><span class="vs">'</span>).astype(<span class="bu">float</span>)</span>
 <span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'Amount'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="38">
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>0        NaN
 1     2000.0
 2        NaN
