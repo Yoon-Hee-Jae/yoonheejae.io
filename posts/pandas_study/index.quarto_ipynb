@@ -1,0 +1,328 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"pandas study\"\n",
+        "author: \"Yoon Heejae\"\n",
+        "date: now\n",
+        "categories: [study]\n",
+        "---\n",
+        "\n",
+        "## 데이터 불러오기"
+      ],
+      "id": "23087666"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "df = pd.read_csv('bike_data.csv')\n",
+        "df.head()\n",
+        "df.shape\n",
+        "df = df.astype({'datetime' : 'datetime64[ns]', 'weather' : 'int64', \n",
+        "                'season' : 'object', 'workingday' : 'object', \n",
+        "                'holiday' : 'object'})"
+      ],
+      "id": "7316030a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 1번 문제"
+      ],
+      "id": "1e05023b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# 1번\n",
+        "df1 = df[df['season']==1]\n",
+        "df1\n",
+        "df1['hour'] = df1['datetime'].dt.hour\n",
+        "df1\n",
+        "max(df1.groupby('hour')['count'].sum()) # 13시 1417개"
+      ],
+      "id": "e0b9442d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 2번 문제"
+      ],
+      "id": "17a7d56b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df.groupby('season')['count'].mean()"
+      ],
+      "id": "e6b4207e",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 3번 문제 3번 특정 달(month) 동안의 총 대여량(count)을 구하시오."
+      ],
+      "id": "35331393"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['month'] = df['datetime'].dt.month\n",
+        "df_jan = df[df['month'] == 1]\n",
+        "df_jan['count'].sum()\n",
+        "df['datetime']"
+      ],
+      "id": "10a88657",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 4번 가장 대여량이 많은 날짜를 구하시오."
+      ],
+      "id": "0167927b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['date'] = df['datetime'].dt.date\n",
+        "a = df.groupby('date',as_index=False)[['count']].sum()\n",
+        "a\n",
+        "\n",
+        "import numpy as np\n",
+        "a\n",
+        "max_idx = np.argmax(a['count'])\n",
+        "a.iloc[max_idx,:]\n",
+        "a.iloc[198,:]"
+      ],
+      "id": "319e8f62",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 5번 시간대(hour)별 평균 대여량(count)을 구하시오."
+      ],
+      "id": "0e6e9b5b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['hour'] = df['datetime'].dt.hour\n",
+        "df.groupby('hour',as_index=False)[['count']].mean()"
+      ],
+      "id": "7d085f48",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 6번 특정 요일(weekday) 동안의 총 대여량(count)을 구하시오."
+      ],
+      "id": "9240d998"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['weekday'] = df['datetime'].dt.weekday\n",
+        "df.groupby('weekday',as_index=False)['count'].sum()"
+      ],
+      "id": "8b108830",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 7번"
+      ],
+      "id": "4bdc3f13"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df\n",
+        "df_melt = pd.melt(df,id_vars=['datetime','season',],\n",
+        "        value_vars=['casual','registered'],\n",
+        "        var_name='user_type',\n",
+        "        value_name='user_count')"
+      ],
+      "id": "5b11e488",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 8번"
+      ],
+      "id": "7056816b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df_melt.groupby(['season','user_type'])[['user_count']].mean().reset_index()"
+      ],
+      "id": "4a841267",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 9번로그 칼럼에서 숫자 정보만 추출하시오."
+      ],
+      "id": "a32efa40"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "pd.set_option('display.max_columns', None) # 전체 칼럼 정보 프린트 옵션\n",
+        "df = pd.read_csv('logdata.csv')\n",
+        "print(df.head(2))\n",
+        "df['숫자'] = df['로그'].str.findall(r'\\d+')"
+      ],
+      "id": "68e794d5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 10번로그 칼럼에서 모든 시간 정보를 추출하시오."
+      ],
+      "id": "682622a5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['시간'] = df['로그'].str.extract(r'([\\d]{2}:[\\d]{2}:[\\d]{2})')\n",
+        "df"
+      ],
+      "id": "04005713",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 11번로그 칼럼에서 한글 정보만 추출하시오."
+      ],
+      "id": "e73758eb"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['User'] = df['로그'].str.extract(r'([가-힣]+)')\n",
+        "df['User']"
+      ],
+      "id": "1f9dd9b5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 12번로그 칼럼에서 특수 문자를 제거하시오."
+      ],
+      "id": "fb10b0a0"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df['제거'] = df['로그'].str.replace(r'[^a-zA-Z0-9가-힣\\s]', '', regex=True)\n",
+        "df['제거']"
+      ],
+      "id": "4b8c17b4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "### 13번# 13번 로그 칼럼에서 유저, Amount 값을 추출한 후 각 유저별 Amount의 평균값을 계산하시오."
+      ],
+      "id": "f33ee45f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df\n",
+        "df['숫자']\n",
+        "df['숫자']\n",
+        "def get_last_number(lst):\n",
+        "    if lst:  # 리스트가 비어있지 않으면\n",
+        "        return lst[-1]\n",
+        "    else:\n",
+        "        return None\n",
+        "df['로그']\n",
+        "df['amount'] = df['로그'].str.findall(r'\\d+').apply(get_last_number)\n",
+        "df['amount']\n",
+        "type(df['amount'][0])\n",
+        "df['amount'] = df['amount'].astype(int)\n",
+        "type(df['amount'][0])\n",
+        "\n",
+        "ans = df.groupby('User',as_index=False)[['amount']].mean()\n",
+        "ans.sort_values('User')\n",
+        "\n",
+        "\n",
+        "#\n",
+        "df['Amount'] = df['로그'].str.extract(r'Amount:\\s*(\\d+)').astype(float)\n",
+        "df['Amount']"
+      ],
+      "id": "f98653fb",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\Users\\USER\\.conda\\envs\\ls-gen5\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
