@@ -16,7 +16,8 @@ df = df.astype({'datetime' : 'datetime64[ns]', 'weather' : 'int64',
                 'holiday' : 'object'})
 ```
 
-### 1번 문제
+### 1번 문제 계절(season) == 1일 때, 가장 대여량이 많은 시간대(hour)을 구하시오.
+
 ```{python}
 # 1번
 df1 = df[df['season']==1]
@@ -26,7 +27,8 @@ df1
 max(df1.groupby('hour')['count'].sum()) # 13시 1417개
 ```
 
-### 2번 문제
+### 2번 문제 각 계절(season)별 평균 대여량(count)을 구하시오.
+
 ```{python}
 df.groupby('season')['count'].mean()
 ```
@@ -64,7 +66,8 @@ df['weekday'] = df['datetime'].dt.weekday
 df.groupby('weekday',as_index=False)['count'].sum()
 ```
 
-### 7번
+### 7번 주어진 Bike Sharing 데이터를 사용하여 넓은 형식(wide format)에서 긴 형식(long format)으로 변환하시오. casual과 registered 열을 하나의 열로 변환하고, 각 기록의 대여 유형과 대여 수를 포함하는 긴 형식 데이터프레임을 만드시오.
+
 ```{python}
 df
 df_melt = pd.melt(df,id_vars=['datetime','season',],
@@ -73,7 +76,8 @@ df_melt = pd.melt(df,id_vars=['datetime','season',],
         value_name='user_count')
 ```
 
-### 8번
+### 8번 이전에 생성한 긴 형식 데이터프레임을 활용하여 각 계절(season)별로 casual과 registered 사용자의 평균 대여 수(count)를 구하시오.
+
 ```{python}
 df_melt.groupby(['season','user_type'])[['user_count']].mean().reset_index()
 ```
@@ -89,7 +93,7 @@ df['숫자'] = df['로그'].str.findall(r'\d+')
 ### 10번로그 칼럼에서 모든 시간 정보를 추출하시오.
 ```{python}
 df['시간'] = df['로그'].str.extract(r'([\d]{2}:[\d]{2}:[\d]{2})')
-df
+df['시간']
 ```
 
 ### 11번로그 칼럼에서 한글 정보만 추출하시오.
@@ -124,9 +128,10 @@ type(df['amount'][0])
 ans = df.groupby('User',as_index=False)[['amount']].mean()
 ans.sort_values('User')
 
-
-#
+## 답안
 df['Amount'] = df['로그'].str.extract(r'Amount:\s*(\d+)').astype(float)
-df['Amount']
+df['User'] = df['로그'].str.extract(r'User:\s*([가-힣]+)')
+grouped = df.groupby('User')['Amount'].mean().reset_index()
+print("\n그룹별 평균 Amount 계산:")
 ```
 
