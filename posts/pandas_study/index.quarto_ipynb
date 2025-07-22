@@ -1,328 +1,917 @@
 {
-  "cells": [
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "---\n",
-        "title: \"pandas study\"\n",
-        "author: \"Yoon Heejae\"\n",
-        "date: now\n",
-        "categories: [study]\n",
-        "---\n",
-        "\n",
-        "## 데이터 불러오기"
-      ],
-      "id": "23087666"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "import pandas as pd\n",
-        "df = pd.read_csv('bike_data.csv')\n",
-        "df.head()\n",
-        "df.shape\n",
-        "df = df.astype({'datetime' : 'datetime64[ns]', 'weather' : 'int64', \n",
-        "                'season' : 'object', 'workingday' : 'object', \n",
-        "                'holiday' : 'object'})"
-      ],
-      "id": "7316030a",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 1번 문제"
-      ],
-      "id": "1e05023b"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "# 1번\n",
-        "df1 = df[df['season']==1]\n",
-        "df1\n",
-        "df1['hour'] = df1['datetime'].dt.hour\n",
-        "df1\n",
-        "max(df1.groupby('hour')['count'].sum()) # 13시 1417개"
-      ],
-      "id": "e0b9442d",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 2번 문제"
-      ],
-      "id": "17a7d56b"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df.groupby('season')['count'].mean()"
-      ],
-      "id": "e6b4207e",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 3번 문제 3번 특정 달(month) 동안의 총 대여량(count)을 구하시오."
-      ],
-      "id": "35331393"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df['month'] = df['datetime'].dt.month\n",
-        "df_jan = df[df['month'] == 1]\n",
-        "df_jan['count'].sum()\n",
-        "df['datetime']"
-      ],
-      "id": "10a88657",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 4번 가장 대여량이 많은 날짜를 구하시오."
-      ],
-      "id": "0167927b"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df['date'] = df['datetime'].dt.date\n",
-        "a = df.groupby('date',as_index=False)[['count']].sum()\n",
-        "a\n",
-        "\n",
-        "import numpy as np\n",
-        "a\n",
-        "max_idx = np.argmax(a['count'])\n",
-        "a.iloc[max_idx,:]\n",
-        "a.iloc[198,:]"
-      ],
-      "id": "319e8f62",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 5번 시간대(hour)별 평균 대여량(count)을 구하시오."
-      ],
-      "id": "0e6e9b5b"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df['hour'] = df['datetime'].dt.hour\n",
-        "df.groupby('hour',as_index=False)[['count']].mean()"
-      ],
-      "id": "7d085f48",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 6번 특정 요일(weekday) 동안의 총 대여량(count)을 구하시오."
-      ],
-      "id": "9240d998"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df['weekday'] = df['datetime'].dt.weekday\n",
-        "df.groupby('weekday',as_index=False)['count'].sum()"
-      ],
-      "id": "8b108830",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 7번"
-      ],
-      "id": "4bdc3f13"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df\n",
-        "df_melt = pd.melt(df,id_vars=['datetime','season',],\n",
-        "        value_vars=['casual','registered'],\n",
-        "        var_name='user_type',\n",
-        "        value_name='user_count')"
-      ],
-      "id": "5b11e488",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 8번"
-      ],
-      "id": "7056816b"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df_melt.groupby(['season','user_type'])[['user_count']].mean().reset_index()"
-      ],
-      "id": "4a841267",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 9번로그 칼럼에서 숫자 정보만 추출하시오."
-      ],
-      "id": "a32efa40"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "pd.set_option('display.max_columns', None) # 전체 칼럼 정보 프린트 옵션\n",
-        "df = pd.read_csv('logdata.csv')\n",
-        "print(df.head(2))\n",
-        "df['숫자'] = df['로그'].str.findall(r'\\d+')"
-      ],
-      "id": "68e794d5",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 10번로그 칼럼에서 모든 시간 정보를 추출하시오."
-      ],
-      "id": "682622a5"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df['시간'] = df['로그'].str.extract(r'([\\d]{2}:[\\d]{2}:[\\d]{2})')\n",
-        "df"
-      ],
-      "id": "04005713",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 11번로그 칼럼에서 한글 정보만 추출하시오."
-      ],
-      "id": "e73758eb"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df['User'] = df['로그'].str.extract(r'([가-힣]+)')\n",
-        "df['User']"
-      ],
-      "id": "1f9dd9b5",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 12번로그 칼럼에서 특수 문자를 제거하시오."
-      ],
-      "id": "fb10b0a0"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df['제거'] = df['로그'].str.replace(r'[^a-zA-Z0-9가-힣\\s]', '', regex=True)\n",
-        "df['제거']"
-      ],
-      "id": "4b8c17b4",
-      "execution_count": null,
-      "outputs": []
-    },
-    {
-      "cell_type": "markdown",
-      "metadata": {},
-      "source": [
-        "### 13번# 13번 로그 칼럼에서 유저, Amount 값을 추출한 후 각 유저별 Amount의 평균값을 계산하시오."
-      ],
-      "id": "f33ee45f"
-    },
-    {
-      "cell_type": "code",
-      "metadata": {},
-      "source": [
-        "df\n",
-        "df['숫자']\n",
-        "df['숫자']\n",
-        "def get_last_number(lst):\n",
-        "    if lst:  # 리스트가 비어있지 않으면\n",
-        "        return lst[-1]\n",
-        "    else:\n",
-        "        return None\n",
-        "df['로그']\n",
-        "df['amount'] = df['로그'].str.findall(r'\\d+').apply(get_last_number)\n",
-        "df['amount']\n",
-        "type(df['amount'][0])\n",
-        "df['amount'] = df['amount'].astype(int)\n",
-        "type(df['amount'][0])\n",
-        "\n",
-        "ans = df.groupby('User',as_index=False)[['amount']].mean()\n",
-        "ans.sort_values('User')\n",
-        "\n",
-        "\n",
-        "#\n",
-        "df['Amount'] = df['로그'].str.extract(r'Amount:\\s*(\\d+)').astype(float)\n",
-        "df['Amount']"
-      ],
-      "id": "f98653fb",
-      "execution_count": null,
-      "outputs": []
-    }
-  ],
-  "metadata": {
-    "kernelspec": {
-      "name": "python3",
-      "language": "python",
-      "display_name": "Python 3 (ipykernel)",
-      "path": "C:\\Users\\USER\\.conda\\envs\\ls-gen5\\share\\jupyter\\kernels\\python3"
-    }
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "445b3355",
+   "metadata": {},
+   "source": [
+    "---\n",
+    "title: \"pandas study\"\n",
+    "author: \"Yoon Heejae\"\n",
+    "date: now\n",
+    "categories: [study]\n",
+    "---\n",
+    "\n",
+    "## 데이터 불러오기"
+   ]
   },
-  "nbformat": 4,
-  "nbformat_minor": 5
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "52b33b6a",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "df = pd.read_csv('bike_data.csv')\n",
+    "df.head()\n",
+    "df.shape\n",
+    "df = df.astype({'datetime' : 'datetime64[ns]', 'weather' : 'int64', \n",
+    "                'season' : 'object', 'workingday' : 'object', \n",
+    "                'holiday' : 'object'})"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e79a5a91",
+   "metadata": {},
+   "source": [
+    "### 1번 문제 계절(season) == 1일 때, 가장 대여량이 많은 시간대(hour)을 구하시오"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "0a83a793",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "C:\\Users\\USER\\AppData\\Local\\Temp\\ipykernel_16224\\1215149187.py:4: SettingWithCopyWarning: \n",
+      "A value is trying to be set on a copy of a slice from a DataFrame.\n",
+      "Try using .loc[row_indexer,col_indexer] = value instead\n",
+      "\n",
+      "See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy\n",
+      "  df1['hour'] = df1['datetime'].dt.hour\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "1417"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# 1번\n",
+    "df1 = df[df['season']==1]\n",
+    "df1\n",
+    "df1['hour'] = df1['datetime'].dt.hour\n",
+    "df1\n",
+    "max(df1.groupby('hour')['count'].sum()) # 13시 1417개"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a27e4401",
+   "metadata": {},
+   "source": [
+    "### 2번 문제 각 계절(season)별 평균 대여량(count)을 구하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "b211a1a1",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "season\n",
+       "1    103.169811\n",
+       "2    218.803922\n",
+       "3    265.500000\n",
+       "4    218.581197\n",
+       "Name: count, dtype: float64"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.groupby('season')['count'].mean()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "1b236d69",
+   "metadata": {},
+   "source": [
+    "### 3번 문제 3번 특정 달(month) 동안의 총 대여량(count)을 구하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "a4f51a54",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0     2011-09-05 17:00:00\n",
+       "1     2011-05-17 11:00:00\n",
+       "2     2011-11-10 09:00:00\n",
+       "3     2011-10-13 07:00:00\n",
+       "4     2011-10-15 14:00:00\n",
+       "              ...        \n",
+       "430   2011-04-07 16:00:00\n",
+       "431   2011-09-03 22:00:00\n",
+       "432   2011-11-12 22:00:00\n",
+       "433   2012-04-11 23:00:00\n",
+       "434   2012-01-06 09:00:00\n",
+       "Name: datetime, Length: 435, dtype: datetime64[ns]"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['month'] = df['datetime'].dt.month\n",
+    "df_jan = df[df['month'] == 1]\n",
+    "df_jan['count'].sum()\n",
+    "df['datetime']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "657e0dc5",
+   "metadata": {},
+   "source": [
+    "### 4번 가장 대여량이 많은 날짜를 구하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "31598086",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "date     2012-05-11\n",
+       "count          1398\n",
+       "Name: 198, dtype: object"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['date'] = df['datetime'].dt.date\n",
+    "a = df.groupby('date',as_index=False)[['count']].sum()\n",
+    "a\n",
+    "\n",
+    "import numpy as np\n",
+    "a\n",
+    "max_idx = np.argmax(a['count'])\n",
+    "a.iloc[max_idx,:]\n",
+    "a.iloc[198,:]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2e0c2064",
+   "metadata": {},
+   "source": [
+    "### 5번 시간대(hour)별 평균 대여량(count)을 구하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "76e32c01",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>hour</th>\n",
+       "      <th>count</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>43.500000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1</td>\n",
+       "      <td>52.714286</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2</td>\n",
+       "      <td>32.842105</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>3</td>\n",
+       "      <td>12.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>4</td>\n",
+       "      <td>6.687500</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>5</td>\n",
+       "      <td>17.750000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>6</td>\n",
+       "      <td>58.705882</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>7</td>\n",
+       "      <td>208.937500</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>8</td>\n",
+       "      <td>483.055556</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9</th>\n",
+       "      <td>9</td>\n",
+       "      <td>260.117647</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>10</th>\n",
+       "      <td>10</td>\n",
+       "      <td>144.130435</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>11</th>\n",
+       "      <td>11</td>\n",
+       "      <td>182.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>12</th>\n",
+       "      <td>12</td>\n",
+       "      <td>277.533333</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>13</th>\n",
+       "      <td>13</td>\n",
+       "      <td>290.600000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>14</th>\n",
+       "      <td>14</td>\n",
+       "      <td>266.842105</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>15</th>\n",
+       "      <td>15</td>\n",
+       "      <td>255.666667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>16</th>\n",
+       "      <td>16</td>\n",
+       "      <td>373.052632</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>17</th>\n",
+       "      <td>17</td>\n",
+       "      <td>519.200000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>18</th>\n",
+       "      <td>18</td>\n",
+       "      <td>447.769231</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>19</th>\n",
+       "      <td>19</td>\n",
+       "      <td>322.103448</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>20</th>\n",
+       "      <td>20</td>\n",
+       "      <td>210.083333</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>21</th>\n",
+       "      <td>21</td>\n",
+       "      <td>196.619048</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>22</th>\n",
+       "      <td>22</td>\n",
+       "      <td>113.560000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>23</th>\n",
+       "      <td>23</td>\n",
+       "      <td>77.352941</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "    hour       count\n",
+       "0      0   43.500000\n",
+       "1      1   52.714286\n",
+       "2      2   32.842105\n",
+       "3      3   12.000000\n",
+       "4      4    6.687500\n",
+       "5      5   17.750000\n",
+       "6      6   58.705882\n",
+       "7      7  208.937500\n",
+       "8      8  483.055556\n",
+       "9      9  260.117647\n",
+       "10    10  144.130435\n",
+       "11    11  182.000000\n",
+       "12    12  277.533333\n",
+       "13    13  290.600000\n",
+       "14    14  266.842105\n",
+       "15    15  255.666667\n",
+       "16    16  373.052632\n",
+       "17    17  519.200000\n",
+       "18    18  447.769231\n",
+       "19    19  322.103448\n",
+       "20    20  210.083333\n",
+       "21    21  196.619048\n",
+       "22    22  113.560000\n",
+       "23    23   77.352941"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['hour'] = df['datetime'].dt.hour\n",
+    "df.groupby('hour',as_index=False)[['count']].mean()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "70b29545",
+   "metadata": {},
+   "source": [
+    "### 6번 특정 요일(weekday) 동안의 총 대여량(count)을 구하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "ee6c72aa",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>weekday</th>\n",
+       "      <th>count</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>0</td>\n",
+       "      <td>10191</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1</td>\n",
+       "      <td>11198</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2</td>\n",
+       "      <td>13839</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>3</td>\n",
+       "      <td>13319</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>4</td>\n",
+       "      <td>16315</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>5</td>\n",
+       "      <td>12105</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>6</td>\n",
+       "      <td>11066</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   weekday  count\n",
+       "0        0  10191\n",
+       "1        1  11198\n",
+       "2        2  13839\n",
+       "3        3  13319\n",
+       "4        4  16315\n",
+       "5        5  12105\n",
+       "6        6  11066"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['weekday'] = df['datetime'].dt.weekday\n",
+    "df.groupby('weekday',as_index=False)['count'].sum()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e3d876d0",
+   "metadata": {},
+   "source": [
+    "### 7번 주어진 Bike Sharing 데이터를 사용하여 넓은 형식(wide format)에서 긴 형식(long format)으로 변환하시오. casual과 registered 열을 하나의 열로 변환하고, 각 기록의 대여 유형과 대여 수를 포함하는 긴 형식 데이터프레임을 만드시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "0bdc02fd",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df\n",
+    "df_melt = pd.melt(df,id_vars=['datetime','season',],\n",
+    "        value_vars=['casual','registered'],\n",
+    "        var_name='user_type',\n",
+    "        value_name='user_count')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "afe5ca7c",
+   "metadata": {},
+   "source": [
+    "### 8번 이전에 생성한 긴 형식 데이터프레임을 활용하여 각 계절(season)별로 casual과 registered 사용자의 평균 대여 수(count)를 구하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "536484b6",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>season</th>\n",
+       "      <th>user_type</th>\n",
+       "      <th>user_count</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>1</td>\n",
+       "      <td>casual</td>\n",
+       "      <td>14.122642</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>1</td>\n",
+       "      <td>registered</td>\n",
+       "      <td>89.047170</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2</td>\n",
+       "      <td>casual</td>\n",
+       "      <td>48.990196</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2</td>\n",
+       "      <td>registered</td>\n",
+       "      <td>169.813725</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>3</td>\n",
+       "      <td>casual</td>\n",
+       "      <td>55.127273</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>3</td>\n",
+       "      <td>registered</td>\n",
+       "      <td>210.372727</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>4</td>\n",
+       "      <td>casual</td>\n",
+       "      <td>29.709402</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>4</td>\n",
+       "      <td>registered</td>\n",
+       "      <td>188.871795</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   season   user_type  user_count\n",
+       "0       1      casual   14.122642\n",
+       "1       1  registered   89.047170\n",
+       "2       2      casual   48.990196\n",
+       "3       2  registered  169.813725\n",
+       "4       3      casual   55.127273\n",
+       "5       3  registered  210.372727\n",
+       "6       4      casual   29.709402\n",
+       "7       4  registered  188.871795"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df_melt.groupby(['season','user_type'])[['user_count']].mean().reset_index()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "fdc17934",
+   "metadata": {},
+   "source": [
+    "### 9번로그 칼럼에서 숫자 정보만 추출하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "f78e6165",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "                                                  로그\n",
+      "0  2024-07-18 12:34:56 User: 홍길동 Action: Login ID...\n",
+      "1  2024-07-18 12:35:00 User: 김철수 Action: Purchase...\n"
+     ]
+    }
+   ],
+   "source": [
+    "pd.set_option('display.max_columns', None) # 전체 칼럼 정보 프린트 옵션\n",
+    "df = pd.read_csv('logdata.csv')\n",
+    "print(df.head(2))\n",
+    "df['숫자'] = df['로그'].str.findall(r'\\d+')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "96b60736",
+   "metadata": {},
+   "source": [
+    "### 10번로그 칼럼에서 모든 시간 정보를 추출하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "fbbbcef7",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0     12:34:56\n",
+       "1     12:35:00\n",
+       "2     12:36:10\n",
+       "3     12:37:22\n",
+       "4     12:38:44\n",
+       "5     12:39:50\n",
+       "6     12:40:56\n",
+       "7     12:41:00\n",
+       "8     12:42:10\n",
+       "9     12:43:22\n",
+       "10    12:44:44\n",
+       "11    12:45:50\n",
+       "12    12:46:56\n",
+       "13    12:47:00\n",
+       "14    12:48:10\n",
+       "15    12:49:22\n",
+       "16    12:50:44\n",
+       "17    12:51:50\n",
+       "18    12:52:56\n",
+       "19    12:53:00\n",
+       "20    12:54:10\n",
+       "21    12:55:22\n",
+       "22    12:56:44\n",
+       "23    12:57:50\n",
+       "24    12:58:56\n",
+       "25    12:59:00\n",
+       "26    13:00:10\n",
+       "27    13:01:22\n",
+       "28    13:02:44\n",
+       "29    13:03:50\n",
+       "Name: 시간, dtype: object"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['시간'] = df['로그'].str.extract(r'([\\d]{2}:[\\d]{2}:[\\d]{2})')\n",
+    "df['시간']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a910b2fd",
+   "metadata": {},
+   "source": [
+    "### 11번로그 칼럼에서 한글 정보만 추출하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "233b0c68",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0     홍길동\n",
+       "1     김철수\n",
+       "2     이영희\n",
+       "3     박지성\n",
+       "4     최강타\n",
+       "5     장보고\n",
+       "6     홍길동\n",
+       "7     김철수\n",
+       "8     이영희\n",
+       "9     박지성\n",
+       "10    최강타\n",
+       "11    장보고\n",
+       "12    홍길동\n",
+       "13    김철수\n",
+       "14    이영희\n",
+       "15    박지성\n",
+       "16    최강타\n",
+       "17    장보고\n",
+       "18    홍길동\n",
+       "19    김철수\n",
+       "20    이영희\n",
+       "21    박지성\n",
+       "22    최강타\n",
+       "23    장보고\n",
+       "24    홍길동\n",
+       "25    김철수\n",
+       "26    이영희\n",
+       "27    박지성\n",
+       "28    최강타\n",
+       "29    장보고\n",
+       "Name: User, dtype: object"
+      ]
+     },
+     "execution_count": 12,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['User'] = df['로그'].str.extract(r'([가-힣]+)')\n",
+    "df['User']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5f071366",
+   "metadata": {},
+   "source": [
+    "### 12번로그 칼럼에서 특수 문자를 제거하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "220b5efb",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0         20240718 123456 User 홍길동 Action Login ID12345\n",
+       "1     20240718 123500 User 김철수 Action Purchase Amoun...\n",
+       "2       20240718 123610 User 이영희 Action Logout Time 30s\n",
+       "3         20240718 123722 User 박지성 Action Login ID67890\n",
+       "4     20240718 123844 User 최강타 Action Purchase Amoun...\n",
+       "5       20240718 123950 User 장보고 Action Logout Time 25s\n",
+       "6     20240718 124056 User 홍길동 Action Purchase Amoun...\n",
+       "7         20240718 124100 User 김철수 Action Login ID23456\n",
+       "8     20240718 124210 User 이영희 Action Purchase Amoun...\n",
+       "9       20240718 124322 User 박지성 Action Logout Time 45s\n",
+       "10        20240718 124444 User 최강타 Action Login ID78901\n",
+       "11    20240718 124550 User 장보고 Action Purchase Amoun...\n",
+       "12      20240718 124656 User 홍길동 Action Logout Time 35s\n",
+       "13    20240718 124700 User 김철수 Action Purchase Amoun...\n",
+       "14        20240718 124810 User 이영희 Action Login ID56789\n",
+       "15    20240718 124922 User 박지성 Action Purchase Amoun...\n",
+       "16      20240718 125044 User 최강타 Action Logout Time 50s\n",
+       "17        20240718 125150 User 장보고 Action Login ID34567\n",
+       "18    20240718 125256 User 홍길동 Action Purchase Amoun...\n",
+       "19      20240718 125300 User 김철수 Action Logout Time 20s\n",
+       "20    20240718 125410 User 이영희 Action Purchase Amoun...\n",
+       "21        20240718 125522 User 박지성 Action Login ID12346\n",
+       "22    20240718 125644 User 최강타 Action Purchase Amoun...\n",
+       "23      20240718 125750 User 장보고 Action Logout Time 55s\n",
+       "24        20240718 125856 User 홍길동 Action Login ID67891\n",
+       "25    20240718 125900 User 김철수 Action Purchase Amoun...\n",
+       "26      20240718 130010 User 이영희 Action Logout Time 40s\n",
+       "27    20240718 130122 User 박지성 Action Purchase Amoun...\n",
+       "28        20240718 130244 User 최강타 Action Login ID78902\n",
+       "29    20240718 130350 User 장보고 Action Purchase Amoun...\n",
+       "Name: 제거, dtype: object"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df['제거'] = df['로그'].str.replace(r'[^a-zA-Z0-9가-힣\\s]', '', regex=True)\n",
+    "df['제거']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "708f66b3",
+   "metadata": {},
+   "source": [
+    "### 13번 로그 칼럼에서 유저, Amount 값을 추출한 후 각 유저별 Amount의 평균값을 계산하시오."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "403fa51f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "그룹별 평균 Amount 계산:\n"
+     ]
+    }
+   ],
+   "source": [
+    "df\n",
+    "df['숫자']\n",
+    "df['숫자']\n",
+    "def get_last_number(lst):\n",
+    "    if lst:  # 리스트가 비어있지 않으면\n",
+    "        return lst[-1]\n",
+    "    else:\n",
+    "        return None\n",
+    "df['로그']\n",
+    "df['amount'] = df['로그'].str.findall(r'\\d+').apply(get_last_number)\n",
+    "df['amount']\n",
+    "type(df['amount'][0])\n",
+    "df['amount'] = df['amount'].astype(int)\n",
+    "type(df['amount'][0])\n",
+    "\n",
+    "ans = df.groupby('User',as_index=False)[['amount']].mean()\n",
+    "ans.sort_values('User')\n",
+    "\n",
+    "## 답안\n",
+    "df['Amount'] = df['로그'].str.extract(r'Amount:\\s*(\\d+)').astype(float)\n",
+    "df['User'] = df['로그'].str.extract(r'User:\\s*([가-힣]+)')\n",
+    "grouped = df.groupby('User')['Amount'].mean().reset_index()\n",
+    "print(\"\\n그룹별 평균 Amount 계산:\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3",
+   "path": "C:\\Users\\USER\\.conda\\envs\\ls-gen5\\share\\jupyter\\kernels\\python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.13"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
 }

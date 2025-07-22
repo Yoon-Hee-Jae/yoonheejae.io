@@ -132,6 +132,6 @@ ans.sort_values('User')
 df['Amount'] = df['로그'].str.extract(r'Amount:\s*(\d+)').astype(float)
 df['User'] = df['로그'].str.extract(r'User:\s*([가-힣]+)')
 grouped = df.groupby('User')['Amount'].mean().reset_index()
-print("\n그룹별 평균 Amount 계산:")
+print(grouped)
 ```
 
